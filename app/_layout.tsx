@@ -23,8 +23,12 @@ function RootLayoutNav({ initialRole }: { initialRole?: UserRole }) {
   const navState = useRootNavigationState();
 
   useEffect(() => {
-    if (navState?.key && initialRole) {
-      router.replace(getRedirectPath(initialRole));
+    if (navState?.key) {
+      if (initialRole) {
+        router.replace(getRedirectPath(initialRole));
+      } else {
+        router.replace('/(auth)');
+      }
     }
   }, [navState?.key, initialRole]);
 
