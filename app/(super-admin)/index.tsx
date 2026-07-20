@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Card, Button, Chip } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../src/providers';
+import { LogoutButton } from '../../src/components/LogoutButton';
 
 function SaaSMetricsRow({ mrr, condos, volume24h }: { mrr: number; condos: number; volume24h: number }) {
   const { theme } = useTheme();
@@ -121,6 +122,7 @@ export default function SuperAdminDashboard() {
 
   return (
     <ScrollView style={[s.container, { backgroundColor: theme.colors.background }]} contentContainerStyle={s.content}>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}><LogoutButton theme={theme} /></View>
       <SaaSMetricsRow mrr={12500} condos={8} volume24h={3420} />
       <SurveyLeadsManager theme={theme} />
       <SystemAlerts theme={theme} />
