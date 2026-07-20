@@ -6,15 +6,27 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Providers, useTheme, useAuth } from '../src/providers';
 
+function getRedirectPath(role: string): string {
+  switch (role) {
+    case 'super_admin': return '/(super-admin)';
+    case 'admin': return '/(admin)';
+    default: return '/(resident)';
+  }
+}
+
 function RootLayoutNav() {
   const { theme } = useTheme();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, role } = useAuth();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.replace('/(auth)/login');
+    if (!isLoading) {
+      if (isAuthenticated && role) {
+        router.replace(getRedirectPath(role));
+      } else if (!isAuthenticated) {
+        router.replace('/(auth)/login');
+      }
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isLoading, role]);
 
   return (
     <PaperProvider theme={theme}>
