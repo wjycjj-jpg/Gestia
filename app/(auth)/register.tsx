@@ -24,8 +24,9 @@ export default function RegisterScreen() {
     });
     if (signUpError) { setError(signUpError.message); setLoading(false); return; }
     if (data.user) {
-      await supabase.from('profiles').insert({
+      await supabase.from('users').insert({
         id: data.user.id,
+        auth_id: data.user.id,
         full_name: name,
         email,
         role: 'resident',
