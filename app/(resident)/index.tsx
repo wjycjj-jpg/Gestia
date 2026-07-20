@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../src/providers';
 import { supabase } from '../../src/lib/supabase';
 import { router } from 'expo-router';
-import { LogoutButton } from '../../src/components/LogoutButton';
+import { RoleBadge } from '../../src/components/RoleBadge';
 
 function BalanceCard({ totalUsd, totalVes, bcvRate }: { totalUsd: number; totalVes: number; bcvRate: number }) {
   const { theme } = useTheme();
@@ -68,7 +68,7 @@ export default function ResidentDashboard() {
 
   return (
     <ScrollView style={[s.container, { backgroundColor: theme.colors.background }]} contentContainerStyle={s.content}>
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}><LogoutButton theme={theme} /></View>
+      <RoleBadge />        
       <BalanceCard totalUsd={125.50} totalVes={45218.75} bcvRate={360.25} />
       <InvoiceBreakdown ordinary={85.00} extraordinary={40.50} lastPaymentStatus="En revisión por la junta" />
       <ProjectProgressBar name="Impermeabilización Torre A" progress={60} />
