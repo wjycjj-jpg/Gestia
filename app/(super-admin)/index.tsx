@@ -3,6 +3,7 @@ import { Card, Button, Chip } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../src/providers';
 import { RoleBadge } from '../../src/components/RoleBadge';
+import { LogoutButton } from '../../src/components/LogoutButton';
 
 function SaaSMetricsRow({ mrr, condos, volume24h }: { mrr: number; condos: number; volume24h: number }) {
   const { theme } = useTheme();
@@ -122,7 +123,10 @@ export default function SuperAdminDashboard() {
 
   return (
     <ScrollView style={[s.container, { backgroundColor: theme.colors.background }]} contentContainerStyle={s.content}>
-      <RoleBadge />        
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingTop: 8 }}>
+        <RoleBadge />
+        <LogoutButton />
+      </View>
       <SaaSMetricsRow mrr={12500} condos={8} volume24h={3420} />
       <SurveyLeadsManager theme={theme} />
       <SystemAlerts theme={theme} />

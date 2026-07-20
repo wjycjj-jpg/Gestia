@@ -5,6 +5,7 @@ import { useTheme } from '../../src/providers';
 import { supabase } from '../../src/lib/supabase';
 import { router } from 'expo-router';
 import { RoleBadge } from '../../src/components/RoleBadge';
+import { LogoutButton } from '../../src/components/LogoutButton';
 
 function BalanceCard({ totalUsd, totalVes, bcvRate }: { totalUsd: number; totalVes: number; bcvRate: number }) {
   const { theme } = useTheme();
@@ -68,7 +69,10 @@ export default function ResidentDashboard() {
 
   return (
     <ScrollView style={[s.container, { backgroundColor: theme.colors.background }]} contentContainerStyle={s.content}>
-      <RoleBadge />        
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingTop: 8 }}>
+        <RoleBadge />
+        <LogoutButton />
+      </View>
       <BalanceCard totalUsd={125.50} totalVes={45218.75} bcvRate={360.25} />
       <InvoiceBreakdown ordinary={85.00} extraordinary={40.50} lastPaymentStatus="En revisión por la junta" />
       <ProjectProgressBar name="Impermeabilización Torre A" progress={60} />

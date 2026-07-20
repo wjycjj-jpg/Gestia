@@ -3,6 +3,7 @@ import { Card, Button, Chip, Divider } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../src/providers';
 import { RoleBadge } from '../../src/components/RoleBadge';
+import { LogoutButton } from '../../src/components/LogoutButton';
 
 function FinancialHealthWidget({ collectionRate, availableCash }: { collectionRate: number; availableCash: number }) {
   const { theme } = useTheme();
@@ -92,7 +93,10 @@ export default function AdminDashboard() {
 
   return (
     <ScrollView style={[s.container, { backgroundColor: theme.colors.background }]} contentContainerStyle={s.content}>
-      <RoleBadge />        
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingTop: 8 }}>
+        <RoleBadge />
+        <LogoutButton />
+      </View>
       <FinancialHealthWidget collectionRate={75} availableCash={15420} />
       <PendingReconciliationsFeed theme={theme} />
       <DelinquencyList theme={theme} />

@@ -20,17 +20,14 @@ export function RoleBadge() {
   };
 
   return (
-    <View style={s.container}>
-      <View style={[s.badge, { backgroundColor: getRoleColor(role) }]}>
-        <MaterialCommunityIcons name="shield-account" size={16} color="#fff" />
-        <Text style={s.text}>{role.toUpperCase().replace('_', ' ')}</Text>
-      </View>
+    <View style={[s.badge, { backgroundColor: getRoleColor(role) }]}>
+      <MaterialCommunityIcons name="shield-account" size={16} color="#fff" />
+      <Text style={s.text}>{role.toUpperCase().replace('_', ' ')}</Text>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: { padding: 16, paddingTop: 20, alignItems: 'center' },
   badge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 },
   text: { fontSize: 14, fontWeight: '600', color: '#fff' },
 });
