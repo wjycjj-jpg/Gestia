@@ -10,6 +10,7 @@ export function LogoutButton() {
     try {
       window.localStorage.removeItem('userRole');
       await supabase.auth.signOut();
+      window.location.href = '/';
     } catch (error) {
       console.log('Error during logout:', error);
     }

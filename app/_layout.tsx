@@ -1,13 +1,20 @@
 import 'react-native-gesture-handler';
-import { useState } from 'react';
-import { Stack } from 'expo-router';
+import { useEffect } from 'react';
+import { Stack, router } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Providers, useTheme } from '../src/providers';
+import { Providers, useTheme, useAuth } from '../src/providers';
 
 function RootLayoutNav() {
   const { theme } = useTheme();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace('/(auth)/login');
+    }
+  }, [isAuthenticated, isLoading]);
 
   return (
     <PaperProvider theme={theme}>
@@ -24,12 +31,6 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Providers>
