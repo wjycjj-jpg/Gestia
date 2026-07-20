@@ -27,7 +27,7 @@ function RootLayoutNav({ initialRole }: { initialRole?: UserRole }) {
       if (initialRole) {
         router.replace(getRedirectPath(initialRole));
       } else {
-        router.replace('/(auth)');
+        router.replace('/(auth)/login');
       }
     }
   }, [navState?.key, initialRole]);
