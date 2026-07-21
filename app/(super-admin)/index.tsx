@@ -1,9 +1,97 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Card, Button, Chip } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from '../../src/providers';
-import { RoleBadge } from '../../src/components/RoleBadge';
-import { LogoutButton } from '../../src/components/LogoutButton';
+import { View, Text, StyleSheet, ScrollView, FlatList, TextInput } from 'react-native';
+import { useState } from 'react';
+
+interface Condominio {
+  id: string;
+  name: string;
+  address: string;
+  units: number;
+  delinquency: number;
+  balanceUsd: number;
+  balanceVes: number;
+  status: 'al_dia' | 'pendiente' | 'critico';
+}
+
+function ActiveCondosList({ theme }: { theme: any }) {
+  const [search, setSearch] = useState('');
+
+  const mockCondos: Condominio[] = [
+    { id: '1', name: 'Edif. San José', address: 'Av. Principal, Chacao', units: 24, delinquency: 8, balanceUsd: 4500, balanceVes: 1620000, status: 'al_dia' },
+    { id: '2', name: 'Res. Los Rosales', address: 'Calle 5, El Paraíso', units: 12, delinquency: 22, balanceUsd: 3200, balanceVes: 1152000, status: 'critico' },
+    { id: '3', name: 'Edif. Caribe', address: 'Av. Bolívar, Centro', units: 36, delinquency: 14, balanceUsd: 7800, balanceVes: 2808000, status: 'al_dia' },
+    { id: '4', name: 'Conjunto El Mirador', address: 'Urb. La Castellana', units: 48, delinquency: 18, balanceUsd: 9500, balanceVes: 3420000, status: 'pendiente' },
+    { id: '5', name: 'Torres del Este', address: 'Av. Francisco de Miranda', units: 60, delinquency: 5, balanceUsd: 12000, balanceVes: 4320000, status: 'al_dia' },
+  ];
+
+  const filtered = mockCondos.filter(c => 
+    c.name.toLowerCase().includes(search.toLowerCase()) || 
+    c.address.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const getStatusColors = (status: Condominio['status']) => {
+    switch (status) {
+      case 'al_dia': return { dot: '#2E7D32', text: 'Al día', bg: '#E8F5E9' };
+      case 'pendiente': return { dot: '#F57C00', text: 'Pagos por verificar', bg: '#FFF3E0' };
+      default: return { dot: '#D32F2F', text: 'Crítico', bg: '#FDEDEC' };
+    }
+  };
+
+  const formatVes = (v: number) => v.toLocaleString('es-VE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+  const renderItem = ({ item }: { item: Condominio }) => {
+    const { dot, text, bg } = getStatusColors(item.status);
+    const delinquencyColor = item.delinquency > 15 ? '#D32F2F' : '#2E7D32';
+
+    return (
+      <View style={s.item} key={item.id}>
+        <View style={s.left}>
+          <Text style={[s.buildingName, { color: theme.colors.onSurface }]}>{item.name}</Text>
+          <Text style={[s.buildingMeta, { color: theme.colors.onSurfaceVariant }]}>{item.address} · {item.units} uds.</Text>
+        </View>
+        <View style={s.center}>
+          <Text style={[s.delinquency, { color: delinquencyColor }]}>{item.delinquency}% morosidad</Text>
+          <Text style={[s.balance, { color: theme.colors.onSurface }]}>${item.balanceUsd.toLocaleString()} / Bs. {formatVes(item.balanceVes)}</Text>
+        </View>
+        <View style={s.right}>
+          <View style={[s.statusBadge, { backgroundColor: bg }]}>
+            <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: dot }} />
+            <Text style={[s.statusText, { color: theme.colors.onSurface }]}>{text}</Text>
+          </View>
+          <Button mode="outlined" compact style={{ marginTop: 8, borderRadius: 8, height: 30 }}>
+            Gestionar
+          </Button>
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <Card style={s.card}>
+      <Card.Content>
+        <View style={s.sectionHeader}>
+          <MaterialCommunityIcons name="office-building" size={20} color={theme.colors.primary} />
+          <Text style={[s.sectionTitle, { color: theme.colors.onSurface }]}>Condominios Activos</Text>
+        </View>
+        <TextInput
+          mode="outlined"
+          placeholder="Buscar condominio..."
+          value={search}
+          onChangeText={setSearch}
+          style={{ marginBottom: 12 }}
+          dense
+          theme={{ colors: { primary: theme.colors.primary } }}
+        />
+        <FlatList
+          data={filtered}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          ItemSeparatorComponent={() => <View style={s.separator} />}
+          contentContainerStyle={{ paddingBottom: 8 }}
+        />
+      </Card.Content>
+    </Card>
+  );
+}
 
 function SaaSMetricsRow({ mrr, condos, volume24h }: { mrr: number; condos: number; volume24h: number }) {
   const { theme } = useTheme();
@@ -88,7 +176,97 @@ function SystemAlerts({ theme }: { theme: any }) {
 }
 
 function OperationsLogisticsTable({ theme }: { theme: any }) {
-  const projects = [
+  interface Condominio {
+  id: string;
+  name: string;
+  address: string;
+  units: number;
+  delinquency: number;
+  balanceUsd: number;
+  balanceVes: number;
+  status: 'al_dia' | 'pendiente' | 'critico';
+}
+
+function ActiveCondosList({ theme }: { theme: any }) {
+  const [search, setSearch] = useState('');
+
+  const mockCondos: Condominio[] = [
+    { id: '1', name: 'Edif. San José', address: 'Av. Principal, Chacao', units: 24, delinquency: 8, balanceUsd: 4500, balanceVes: 1620000, status: 'al_dia' },
+    { id: '2', name: 'Res. Los Rosales', address: 'Calle 5, El Paraíso', units: 12, delinquency: 22, balanceUsd: 3200, balanceVes: 1152000, status: 'critico' },
+    { id: '3', name: 'Edif. Caribe', address: 'Av. Bolívar, Centro', units: 36, delinquency: 14, balanceUsd: 7800, balanceVes: 2808000, status: 'al_dia' },
+    { id: '4', name: 'Conjunto El Mirador', address: 'Urb. La Castellana', units: 48, delinquency: 18, balanceUsd: 9500, balanceVes: 3420000, status: 'pendiente' },
+    { id: '5', name: 'Torres del Este', address: 'Av. Francisco de Miranda', units: 60, delinquency: 5, balanceUsd: 12000, balanceVes: 4320000, status: 'al_dia' },
+  ];
+
+  const filtered = mockCondos.filter(c => 
+    c.name.toLowerCase().includes(search.toLowerCase()) || 
+    c.address.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const getStatusColors = (status: Condominio['status']) => {
+    switch (status) {
+      case 'al_dia': return { dot: '#2E7D32', text: 'Al día', bg: '#E8F5E9' };
+      case 'pendiente': return { dot: '#F57C00', text: 'Pagos por verificar', bg: '#FFF3E0' };
+      default: return { dot: '#D32F2F', text: 'Crítico', bg: '#FDEDEC' };
+    }
+  };
+
+  const formatVes = (v: number) => v.toLocaleString('es-VE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+  const renderItem = ({ item }: { item: Condominio }) => {
+    const { dot, text, bg } = getStatusColors(item.status);
+    const delinquencyColor = item.delinquency > 15 ? '#D32F2F' : '#2E7D32';
+
+    return (
+      <View style={s.item} key={item.id}>
+        <View style={s.left}>
+          <Text style={[s.buildingName, { color: theme.colors.onSurface }]}>{item.name}</Text>
+          <Text style={[s.buildingMeta, { color: theme.colors.onSurfaceVariant }]}>{item.address} · {item.units} uds.</Text>
+        </View>
+        <View style={s.center}>
+          <Text style={[s.delinquency, { color: delinquencyColor }]}>{item.delinquency}% morosidad</Text>
+          <Text style={[s.balance, { color: theme.colors.onSurface }]}>${item.balanceUsd.toLocaleString()} / Bs. {formatVes(item.balanceVes)}</Text>
+        </View>
+        <View style={s.right}>
+          <View style={s.statusRow}>
+            <View style={[s.statusDot, { backgroundColor: dot }]} />
+            <Text style={[s.statusText, { color: theme.colors.onSurface }]}>{text}</Text>
+          </View>
+          <Button mode="outlined" compact onPress={() => {}} style={s.manageBtn} contentStyle={{ paddingHorizontal: 12, paddingVertical: 4 }}>
+            Gestionar
+          </Button>
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <Card style={s.card}>
+      <Card.Content>
+        <View style={s.sectionHeader}>
+          <MaterialCommunityIcons name="office-building" size={20} color={theme.colors.primary} />
+          <Text style={[s.sectionTitle, { color: theme.colors.onSurface }]}>Condominios Activos</Text>
+        </View>
+        <TextInput
+          style={s.searchInput}
+          placeholder="Buscar condominio..."
+          value={search}
+          onChangeText={setSearch}
+          mode="outlined"
+        />
+        <FlatList
+          data={filtered}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          contentContainerStyle={s.listContent}
+          showsVerticalScrollIndicator={false}
+        />
+      </Card.Content>
+    </Card>
+  );
+}
+
+const projects = [
     { name: 'Impermeabilización', condominio: 'Res. Los Rosales', status: 'En Progreso', progress: 60, crew: 'Cuadrilla A' },
     { name: 'Pintura Fachada', condominio: 'Edif. San José', status: 'Pendiente', progress: 0, crew: 'Cuadrilla B' },
     { name: 'Reparación Ascensor', condominio: 'Edif. Caribe', status: 'Completado', progress: 100, crew: 'Cuadrilla C' },
@@ -128,6 +306,7 @@ export default function SuperAdminDashboard() {
         <LogoutButton />
       </View>
       <SaaSMetricsRow mrr={12500} condos={8} volume24h={3420} />
+      <ActiveCondosList theme={theme} />
       <SurveyLeadsManager theme={theme} />
       <SystemAlerts theme={theme} />
       <OperationsLogisticsTable theme={theme} />
@@ -152,4 +331,20 @@ const s = StyleSheet.create({
   projectItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, gap: 4 },
   progressBg: { height: 6, borderRadius: 3, overflow: 'hidden' },
   progressFill: { height: '100%', borderRadius: 3 },
+
+  // ActiveCondosList styles
+  item: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, gap: 12 },
+  left: { flex: 1 },
+  center: { width: 140, alignItems: 'flex-end' },
+  right: { width: 160, alignItems: 'flex-end' },
+  buildingName: { fontSize: 15, fontWeight: '600' },
+  buildingMeta: { fontSize: 11, marginTop: 2 },
+  delinquency: { fontSize: 12, fontWeight: '600', marginBottom: 2 },
+  balance: { fontSize: 11 },
+  statusRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 6 },
+  statusDot: { width: 8, height: 8, borderRadius: 4 },
+  statusText: { fontSize: 11, fontWeight: '500' },
+  manageBtn: { borderRadius: 8, height: 28 },
+  searchInput: { marginBottom: 12 },
+  separator: { height: 1, backgroundColor: '#E0E0E0', marginVertical: 4 },
 });
