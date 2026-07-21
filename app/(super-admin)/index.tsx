@@ -347,4 +347,5 @@ const s = StyleSheet.create({
   manageBtn: { borderRadius: 8, height: 28 },
   searchInput: { marginBottom: 12 },
   separator: { height: 1, backgroundColor: '#E0E0E0', marginVertical: 4 },
+  listContent: { paddingBottom: 8 },
 });
